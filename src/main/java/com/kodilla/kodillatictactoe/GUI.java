@@ -7,13 +7,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 
-public class TicTacToe extends Application {
+public class GUI extends Application {
 
-    private Image image = new Image("file:src/main/resources/tictactoe.jpg");
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+    private final Image image = new Image("file:src/main/resources/tictactoe.jpg");
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -29,7 +25,10 @@ public class TicTacToe extends Application {
         primaryStage.setTitle("TicTacToe");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
 
+    public static void main(String[] args) {
+        launch(args);
     }
 }
 
