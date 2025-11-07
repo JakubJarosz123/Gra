@@ -12,7 +12,7 @@ public class NumberCounter extends Application {
     private int counter = 0;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception{
         Label label = new Label("0");
         label.setStyle("-fx-font-size: 26px; -fx-text-color: white");
 

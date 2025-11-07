@@ -9,7 +9,7 @@ plugins {
 group = 'com.kodilla'
 version = '0.0.1-SNAPSHOT'
 description = 'kodilla-tictactoe'
-mainClassName = 'com.kodilla.javafxexamples.Main'
+mainClassName = 'com.kodilla.kodillatictactoe.UX'
 
 java {
     toolchain {
