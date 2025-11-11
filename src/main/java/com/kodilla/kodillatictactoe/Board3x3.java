@@ -1,11 +1,11 @@
 package com.kodilla.kodillatictactoe;
 
-public class Board {
+public class Board3x3 {
     private String[][] figures;
     private int playerXWins = 0;
     private int computerOWins = 0;
 
-    public Board(int size) {
+    public Board3x3(int size) {
         figures = new String[size][size];
         resetBoard();
     }
