@@ -2,14 +2,12 @@ package com.kodilla.kodillatictactoe;
 
 public class Board {
     private String[][] figures;
+    private int playerXWins = 0;
+    private int computerOWins = 0;
 
     public Board(int size) {
         figures = new String[size][size];
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                figures[row][col] = "";
-            }
-        }
+        resetBoard();
     }
 
     public int getSize() {
@@ -66,8 +64,15 @@ public class Board {
             winner = figures[0][2];
             return winner;
         }
+        return "";
+    }
 
-        return winner;
+    public void registerWinner(String winner) {
+        if (winner.equals("X")) {
+            playerXWins++;
+        } else if (winner.equals("O")) {
+            computerOWins++;
+        }
     }
 
     public boolean isDraw() {
@@ -83,5 +88,22 @@ public class Board {
             }
         }
         return true;
+    }
+
+    public String stats() {
+        String winner = whoIsWinner();
+
+        String result;
+        if (!winner.equals("")) {
+            result = "Winner: " + winner;
+        } else if (isDraw()) {
+            result = "Draw";
+        } else {
+            result = "Game In Progress";
+        }
+
+        return "Player X: " + playerXWins +
+                "\nPlayer O: " + computerOWins +
+                "\n" + result;
     }
 }

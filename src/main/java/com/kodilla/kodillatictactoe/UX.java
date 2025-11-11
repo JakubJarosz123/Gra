@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -20,9 +21,10 @@ import javafx.util.Duration;
 
 public class UX extends Application {
 
-    private boolean isXTurn = true;
     private Board board = new Board(3);
+    private AI ai = new AI(board);
     public static final double CELL_SIZE = 200.0;
+    private boolean gameOver = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -34,11 +36,10 @@ public class UX extends Application {
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setPrefSize(CELL_SIZE * 3, CELL_SIZE * 3);
 
-        TextField statistics = new TextField();
+        TextArea statistics = new TextArea();
         statistics.setEditable(false);
         statistics.setPrefSize(300, 300);
-        statistics.setStyle("-fx-background-color: rgb(137,207,240); -fx-font-size: 40px; -fx-text-fill: black");
-        statistics.setAlignment(Pos.TOP_LEFT);
+        statistics.setStyle("-fx-control-inner-background: rgb(137,207,240); -fx-font-size: 20px; -fx-text-fill: black");
 
         TextField[][] cells = new TextField[board.getSize()][board.getSize()];
         for (int row = 0; row < board.getSize(); row++) {
@@ -54,6 +55,8 @@ public class UX extends Application {
         }
 
         gridPane.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            if (gameOver) return;
+
             Point2D localPoint = gridPane.sceneToLocal(e.getSceneX(), e.getSceneY());
             double x = localPoint.getX();
             double y = localPoint.getY();
@@ -64,22 +67,40 @@ public class UX extends Application {
             if (row < board.getSize() && col <  board.getSize()) {
                 TextField cell = cells[row][col];
                 if (cell.getText().isEmpty()) {
-                    String value = isXTurn ? "X" : "O";
-                    cell.setText(value);
-                    cell.setStyle("-fx-font-size: 80px; -fx-text-fill: " + (isXTurn ? "red" : "green") + "; -fx-border-style: solid; -fx-border-width: 2; -fx-background-color: rgb(137,207,240)");
-                    board.setValue(row, col, value);
-                    isXTurn = !isXTurn;
+                    //Player move
+                    cell.setText("X");
+                    cell.setStyle("-fx-font-size: 80px; -fx-text-fill: red; -fx-border-style: solid; -fx-border-width: 2; -fx-background-color: rgb(137,207,240)");
+                    board.setValue(row, col, "X");
 
+                    //Checks winner
                     String winner = board.whoIsWinner();
-
                     if (!winner.equals("")) {
-                        System.out.println("Winner: " + winner);
-                        gridPane.setDisable(true);
-                        statistics.setText("Winner: " + winner);
+                        board.registerWinner(winner);
+                        gameOver = true;
                     } else if (board.isDraw()) {
-                        System.out.println("It's a draw");
-                        statistics.setText("It's a draw");
-                        gridPane.setDisable(true);
+                        gameOver = true;
+                    }
+                    statistics.setText(board.stats());
+
+                    //AI move (if game not over)
+                    if (!gameOver) {
+                        int[] aiMove = ai.getAiMove();
+                        if (aiMove != null) {
+                            int r = aiMove[0];
+                            int c = aiMove[1];
+                            TextField aiCell = cells[r][c];
+                            aiCell.setText("O");
+                            aiCell.setStyle("-fx-font-size: 80px; -fx-text-fill: green; -fx-border-style: solid; -fx-border-width: 2; -fx-background-color: rgb(137,207,240)");
+                            board.setValue(r, c, "O");
+                        }
+
+                        //Check winner after ai move
+                        String aiWinner = board.whoIsWinner();
+                        if (!aiWinner.equals("") || aiWinner.isEmpty()) {
+                            board.registerWinner(aiWinner);
+                        } else if (board.isDraw()) {
+                        }
+                        statistics.setText(board.stats());
                     }
                 }
             }
@@ -98,10 +119,10 @@ public class UX extends Application {
                 }
             }
 
+            gameOver = false;
             board.resetBoard();
-            isXTurn = true;
             gridPane.setDisable(false);
-            statistics.clear();
+            statistics.setText(board.stats());
 
             DropShadow glow = new DropShadow();
             glow.setColor(Color.GOLD);
