@@ -1,19 +1,15 @@
 package com.kodilla.kodillatictactoe;
 
-public class Board10x10 {
+public class Board {
     private String[][] figures;
     private int playerXWins = 0;
     private int computerOWins = 0;
     private int winLength;
 
-    public Board10x10(int size, int winLength) {
+    public Board(int size, int winLength) {
         this.winLength = winLength;
         figures = new String[size][size];
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
-                figures[row][col] = "";
-            }
-        }
+        resetBoard();
     }
 
     public int getSize() {
@@ -30,13 +26,60 @@ public class Board10x10 {
 
     public void resetBoard() {
         for (int row = 0; row < figures.length; row++) {
-            for (int col = 0; col < figures[row].length; col++) {
+            for (int col = 0; col < figures.length; col++) {
                 figures[row][col] = "";
             }
         }
     }
 
     public String whoIsWinner() {
+        if (getSize() == 3) {
+            return winner3();
+        } else if (getSize() == 10) {
+            return winner10();
+        } else {
+            return "";
+        }
+    }
+
+    public String winner3() {
+        String winner = "";
+
+        for (int row = 0; row < figures.length; row++) {
+            if (!figures[row][0].isEmpty() &&
+                    figures[row][0].equals(figures[row][1]) &&
+                    figures[row][1].equals(figures[row][2])) {
+                winner = figures[row][0];
+                return winner;
+            }
+        }
+
+        for (int col = 0; col < figures.length; col++) {
+            if (!figures[0][col].isEmpty() &&
+                    figures[0][col].equals(figures[1][col]) &&
+                    figures[1][col].equals(figures[2][col])) {
+                winner = figures[0][col];
+                return winner;
+            }
+        }
+
+        if (!figures[0][0].isEmpty() &&
+                figures[0][0].equals(figures[1][1]) &&
+                figures[1][1].equals(figures[2][2])) {
+            winner = figures[0][0];
+            return winner;
+        }
+
+        if (!figures[0][2].isEmpty() &&
+                figures[0][2].equals(figures[1][1]) &&
+                figures[1][1].equals(figures[2][0])) {
+            winner = figures[0][2];
+            return winner;
+        }
+        return "";
+    }
+
+    public String winner10() {
         int size = figures.length;
 
         for (int row = 0; row < size; row++) {
@@ -106,20 +149,20 @@ public class Board10x10 {
 
     public void registerWinner(String winner) {
         if (winner.equals("X")) {
-            playerXWins ++;
+            playerXWins++;
         } else if (winner.equals("O")) {
-            computerOWins ++;
+            computerOWins++;
         }
     }
 
     public boolean isDraw() {
         if (!whoIsWinner().equals("")) {
-            return true;
+            return false;
         }
 
         for (int row = 0; row < figures.length; row++) {
-            for (int col = 0; col < figures.length; col++) {
-                if (figures[row][col].isEmpty()) {
+            for (int col = 0; col < figures[row].length; col++) {
+                if (figures[row][col] == null || figures[row][col].equals("")) {
                     return false;
                 }
             }
