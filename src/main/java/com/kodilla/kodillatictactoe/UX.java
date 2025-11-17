@@ -18,13 +18,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import java.io.*;
 
 public class UX extends Application {
 
-    private Board board;
     private Board board3;
     private Board board10;
-    private AI ai;
     private AI ai3;
     private AI ai10;
     public static final double cellSize3x3 = 200.0;
@@ -220,6 +219,9 @@ public class UX extends Application {
         newGameButton3x3.setPrefSize(150, 70);
         newGameButton3x3.setStyle("-fx-background-color: #00001c; -fx-text-fill: white; -fx-font-size: 22px");
         newGameButton3x3.setOnAction(e -> {
+            gameOver3 = false;
+            board3.resetBoard();
+
             for (int r = 0; r < board3.getSize(); r++) {
                 for (int c = 0; c < board3.getSize(); c++) {
                     cells3x3[r][c].clear();
@@ -227,8 +229,7 @@ public class UX extends Application {
                     cells3x3[r][c].setStyle("-fx-font-size: 80px; -fx-text-fill: white; -fx-background-color: #00001c; -fx-border-style: solid; -fx-border-width: 2; -fx-border-color: white");
                 }
             }
-            gameOver3 = false;
-            board3.resetBoard();
+
             gridPane3x3.setDisable(false);
             statistics3x3.setText(board3.stats());
 
@@ -242,8 +243,60 @@ public class UX extends Application {
             pause.play();
         });
 
-        VBox vbox3x3 = new VBox(statistics3x3, homeButton3x3, newGameButton3x3);
-        vbox3x3.setPadding(new Insets(50));
+        Button saveGameButton3x3 = new Button("Save Game");
+        saveGameButton3x3.setPrefSize(150, 70);
+        saveGameButton3x3.setStyle("-fx-background-color: #00001c; -fx-text-fill: white; -fx-font-size: 22px");
+        saveGameButton3x3.setOnAction(e -> {
+            saveGame(board3, "ranking3.list");
+
+            DropShadow glow = new DropShadow();
+            glow.setColor(Color.GOLD);
+            glow.setRadius(30);
+            saveGameButton3x3.setEffect(glow);
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+            pause.setOnFinished(ev -> saveGameButton3x3.setEffect(null));
+            pause.play();
+        });
+
+        Button loadGameButton3x3 = new Button("Load Game");
+        loadGameButton3x3.setPrefSize(150, 70);
+        loadGameButton3x3.setStyle("-fx-background-color: #00001c; -fx-text-fill: white; -fx-font-size: 22px");
+        loadGameButton3x3.setOnAction(e -> {
+            Board loaded = loadGame("ranking3.list");
+            if (loaded != null) {
+                board3 = loaded;
+                ai3 = new AI(board3);
+                gameOver3 = false;
+
+                for (int row = 0; row < board3.getSize(); row++) {
+                    for (int col = 0; col < board3.getSize(); col++) {
+                        cells3x3[row][col].setText(board3.getValue(row, col));
+
+                        String value = board3.getValue(row, col);
+                        if (value.equals("X")) {
+                            cells3x3[row][col].setStyle("-fx-font-size: 80px; -fx-text-fill: red; -fx-border-style: solid; -fx-border-width: 2; -fx-background-color: #00001c; -fx-border-color: white");
+                        } else if (value.equals("O")) {
+                            cells3x3[row][col].setStyle("-fx-font-size: 80px; -fx-text-fill: green; -fx-border-style: solid; -fx-border-width: 2; -fx-background-color: #00001c; -fx-border-color: white");
+                        }
+                    }
+                }
+                statistics3x3.setText(board3.stats());
+
+                DropShadow glow = new DropShadow();
+                glow.setColor(Color.GOLD);
+                glow.setRadius(30);
+                loadGameButton3x3.setEffect(glow);
+
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+                pause.setOnFinished(ev -> loadGameButton3x3.setEffect(null));
+                pause.play();
+            }
+
+        });
+
+        VBox vbox3x3 = new VBox(statistics3x3, homeButton3x3, newGameButton3x3, saveGameButton3x3, loadGameButton3x3);
+        vbox3x3.setPadding(new Insets(30));
         vbox3x3.setAlignment(Pos.TOP_CENTER);
         vbox3x3.setSpacing(60);
 
@@ -356,6 +409,9 @@ public class UX extends Application {
         newGameButton10x10.setPrefSize(150, 70);
         newGameButton10x10.setStyle("-fx-background-color: #00001c; -fx-text-fill: white; -fx-font-size: 22px");
         newGameButton10x10.setOnAction(e -> {
+            gameOver10 = false;
+            board10.resetBoard();
+
             for (int r = 0; r < 10; r++) {
                 for (int c = 0; c < 10; c++) {
                     cells10x10[r][c].clear();
@@ -364,8 +420,6 @@ public class UX extends Application {
                 }
             }
 
-            gameOver10 = false;
-            board10.resetBoard();
             gridPane10x10.setDisable(false);
             statistics10x10.setText(board10.stats());
 
@@ -379,8 +433,59 @@ public class UX extends Application {
             pause.play();
         });
 
-        VBox vbox10x10 = new VBox(statistics10x10, homeButton10x10, newGameButton10x10);
-        vbox10x10.setPadding(new Insets(50));
+        Button saveGameButton10x10 = new Button("Save Game");
+        saveGameButton10x10.setPrefSize(150, 70);
+        saveGameButton10x10.setStyle("-fx-background-color: #00001c; -fx-text-fill: white; -fx-font-size: 22px");
+        saveGameButton10x10.setOnAction(e -> {
+            saveGame(board10, "ranking10.list");
+
+            DropShadow glow = new DropShadow();
+            glow.setColor(Color.GOLD);
+            glow.setRadius(30);
+            saveGameButton10x10.setEffect(glow);
+
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+            pause.setOnFinished(ev -> saveGameButton10x10.setEffect(null));
+            pause.play();
+        });
+
+        Button loadGameButton10x10 = new Button("Load Game");
+        loadGameButton10x10.setPrefSize(150, 70);
+        loadGameButton10x10.setStyle("-fx-background-color: #00001c; -fx-text-fill: white; -fx-font-size: 22px");
+        loadGameButton10x10.setOnAction(e -> {
+            Board loaded = loadGame("ranking10.list");
+            if (loaded != null) {
+                board10 = loaded;
+                ai10 = new AI(board10);
+                gameOver10 = false;
+
+                for (int row = 0; row < board10.getSize(); row++) {
+                    for (int col = 0; col < board10.getSize(); col++) {
+                        cells10x10[row][col].setText(board10.getValue(row, col));
+
+                        String value = board10.getValue(row, col);
+                        if (value.equals("X")) {
+                            cells10x10[row][col].setStyle("-fx-font-size: 80px; -fx-text-fill: red; -fx-border-style: solid; -fx-border-width: 2; -fx-background-color: #00001c; -fx-border-color: white");
+                        } else if (value.equals("O")) {
+                            cells10x10[row][col].setStyle("-fx-font-size: 80px; -fx-text-fill: green; -fx-border-style: solid; -fx-border-width: 2; -fx-background-color: #00001c; -fx-border-color: white");
+                        }
+                    }
+                }
+                statistics10x10.setText(board10.stats());
+
+                DropShadow glow = new DropShadow();
+                glow.setColor(Color.GOLD);
+                glow.setRadius(30);
+                loadGameButton10x10.setEffect(glow);
+
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+                pause.setOnFinished(ev -> loadGameButton10x10.setEffect(null));
+                pause.play();
+            }
+        });
+
+        VBox vbox10x10 = new VBox(statistics10x10, homeButton10x10, newGameButton10x10, saveGameButton10x10, loadGameButton10x10);
+        vbox10x10.setPadding(new Insets(30));
         vbox10x10.setAlignment(Pos.TOP_CENTER);
         vbox10x10.setSpacing(40);
 
@@ -395,6 +500,26 @@ public class UX extends Application {
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(sceneHome);
         primaryStage.show();
+    }
+
+    public void saveGame(Board board, String name) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(name))) {
+            oos.writeObject(board);
+            System.out.println("Saved game!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Board loadGame(String name) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(name))) {
+            Board loaded = (Board) ois.readObject();
+            System.out.println("Loaded game!");
+            return loaded;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static void main(String[] args) {

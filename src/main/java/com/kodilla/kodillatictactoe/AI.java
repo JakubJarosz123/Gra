@@ -24,7 +24,7 @@ public class AI {
             return randomMove(board);
         } else if (difficulty == 2) {
             int[] block = findBlockingMove();
-            return block != null ? block : randomMove(board)        ;
+            return block != null ? block : randomMove(board);
         } else {
             if (size == 3) {
                 return getBestMove3();

@@ -1,6 +1,9 @@
 package com.kodilla.kodillatictactoe;
 
-public class Board {
+import java.io.Serializable;
+
+public class Board implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String[][] figures;
     private int playerXWins = 0;
     private int computerOWins = 0;

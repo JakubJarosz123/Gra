@@ -32,7 +32,7 @@ public class UXTestSuite {
         @Test
         public void winnerOinRowsTest() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
 
             for (int col = 0; col < board.getSize(); col++) {
                 board.setValue(0, col, "O");
@@ -47,7 +47,7 @@ public class UXTestSuite {
         @Test
         public void winnerOinColumnsTest() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
 
             for (int row = 0; row < board.getSize(); row++) {
                 board.setValue(row, 0, "O");
@@ -62,7 +62,7 @@ public class UXTestSuite {
         @Test
         public void winnerOinDiagonalTest() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
 
             for (int row = 0; row < board.getSize(); row++) {
                 for (int col = 0; col < board.getSize(); col++) {
@@ -83,7 +83,7 @@ public class UXTestSuite {
         @Test
         public void winnerXinRowsTest() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
 
             for (int row = 0; row < board.getSize(); row++) {
                 board.setValue(row, 0, "X");
@@ -98,7 +98,7 @@ public class UXTestSuite {
         @Test
         public void winnerXinColumnsTest() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
 
             for (int row = 0; row < board.getSize(); row++) {
                 board.setValue(row, 0, "X");
@@ -113,7 +113,7 @@ public class UXTestSuite {
         @Test
         public void winnerXinDiagonalTest() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
 
             for (int row = 0; row < board.getSize(); row++) {
                 for (int col = 0; col < board.getSize(); col++) {
@@ -133,7 +133,7 @@ public class UXTestSuite {
         @Test
         public void drawTest() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
 
             String[][] layout = {
                     {"O", "X", "O"},
@@ -159,7 +159,7 @@ public class UXTestSuite {
         @Test
         public void shouldThrowExceptionForInvalidPosition() {
             //Given
-            Board board = new Board(3);
+            Board board = new Board(3, 3);
             //When & Then
             assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
                 board.setValue(9, 0, "O");
